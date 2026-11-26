@@ -115,6 +115,8 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     borderRadius: 8,
     backgroundColor: '#ffffff',
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
   roleButtonActive: {
     backgroundColor: '#000000',
@@ -123,6 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#000000',
+    textAlign: 'center',
   },
   roleButtonTextActive: {
     color: '#ffffff',

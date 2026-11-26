@@ -4,15 +4,15 @@ import { BlurView } from 'expo-blur';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
-    Dimensions,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { useAuth } from '@/context/auth-context';
@@ -22,7 +22,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const ROLE_PRESETS: { role: UserRole; label: string; email: string }[] = [
   { role: 'student', label: 'Student', email: 'alex.student@students.uca.ac.uk' },
-  { role: 'president', label: 'President', email: 'sam.pres@students.uca.ac.uk' },
+  { role: 'president', label: 'Society President', email: 'sam.pres@students.uca.ac.uk' },
   { role: 'staff', label: 'UCA Staff', email: 'jordan.staff@uca.ac.uk' },
 ];
 
@@ -247,19 +247,25 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.25)',
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     alignItems: 'center',
+    justifyContent: 'center', 
   },
   rolePillActive: {
     backgroundColor: '#76C7C0',
     borderColor: '#76C7C0',
+    alignItems: 'center',
+    justifyContent: 'center', 
   },
   rolePillText: {
     fontSize: 12,
     fontWeight: '600',
     color: 'rgba(255, 255, 255, 0.85)',
+    textAlign: 'center',
   },
   rolePillTextActive: {
     color: '#11181C',
     fontWeight: '700',
+    alignItems: 'center',
+    justifyContent: 'center', 
   },
   inputLabel: {
     fontSize: 13,
