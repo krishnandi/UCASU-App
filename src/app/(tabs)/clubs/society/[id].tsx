@@ -3,13 +3,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Image,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    View,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
 } from 'react-native';
 
 export default function SocietyDetailScreen() {
@@ -103,7 +103,11 @@ export default function SocietyDetailScreen() {
           ) : (
             society.events.map((ev) => (
               <Pressable key={ev.id} style={styles.eventRow}>
-                <View style={styles.eventThumb} />
+                <Image
+                  source={ev.image ?? society.image}
+                  style={styles.eventThumb}
+                  resizeMode="cover"
+                />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.eventTitle}>{ev.title}</Text>
                   <Text style={styles.eventMeta}>{ev.dateLocation}</Text>

@@ -10,7 +10,7 @@ export function SocietyCard({ item }: { item: Society }) {
     <Pressable
       onPress={() =>
         router.push({
-          pathname: '/search/society/[id]',
+          pathname: '/(tabs)/clubs/society/[id]',
           params: { id: item.id },
         })
       }

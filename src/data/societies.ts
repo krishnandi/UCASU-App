@@ -31,6 +31,7 @@ export const SOCIETIES: Society[] = [
         id: 'e1',
         title: 'Cirque De Slay',
         dateLocation: 'Fri 27 Mar · Glasshouse · From £4.00',
+        image: require('../../assets/images/dragevent.jpg'),
       },
     ],
   },
