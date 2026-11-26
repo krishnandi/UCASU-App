@@ -5,13 +5,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import { AuthProvider, useAuth } from '@/context/auth-context';
+import { AuthProvider } from '@/context/auth-context';
 
 SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
-  const { hasEnteredApp } = useAuth();
-
   useEffect(() => {
     SplashScreen.hideAsync();
   }, []);
@@ -19,10 +17,7 @@ function RootNavigator() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="login" />
-      <Stack.Protected guard={hasEnteredApp}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="profile" />
-      </Stack.Protected>
+      <Stack.Screen name="(tabs)" />
     </Stack>
   );
 }

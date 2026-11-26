@@ -1,52 +1,96 @@
-import { NativeTabs } from 'expo-router/native-tabs';
-import { useColorScheme } from 'react-native';
-
-import { Colors } from '@/constants/theme';
+// src/components/app-tabs.tsx
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { Platform } from 'react-native';
 
 export default function AppTabs() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'dark' ? 'dark' : 'light'];
-
   return (
-    <NativeTabs
-      backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger>
-        <NativeTabs.Trigger name="index">
-            <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-            <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
-          </NativeTabs.Trigger>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#3D3D3D',
+        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '600',
+          marginTop: 2,
+        },
+        tabBarStyle: {
+          backgroundColor: '#FFFFFF',
+          borderTopWidth: 1,
+          borderTopColor: '#E5E7EB',
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          height: Platform.OS === 'ios' ? 84 : 68,
+          paddingTop: 8,
+          paddingBottom: Platform.OS === 'ios' ? 24 : 10,
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          elevation: 8,
+          shadowColor: '#000000',
+          shadowOpacity: 0.06,
+          shadowRadius: 10,
+          shadowOffset: { width: 0, height: -2 },
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? 'home' : 'home-outline'}
+              size={24}
+              color={focused ? '#3D3D3D' : '#9CA3AF'}
+            />
+          ),
+        }}
+      />
 
-          <NativeTabs.Trigger name="search">
-            <NativeTabs.Trigger.Label>Societies</NativeTabs.Trigger.Label>
-            <NativeTabs.Trigger.Icon sf="person.3.fill" md="groups" />
-          </NativeTabs.Trigger>
+      <Tabs.Screen
+        name="clubs"
+        options={{
+          title: 'Clubs',
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? 'people' : 'people-outline'}
+              size={24}
+              color={focused ? '#3D3D3D' : '#9CA3AF'}
+            />
+          ),
+        }}
+      />
 
-          <NativeTabs.Trigger name="explore">
-            <NativeTabs.Trigger.Label>Events</NativeTabs.Trigger.Label>
-            <NativeTabs.Trigger.Icon sf="calendar" md="event" />
-          </NativeTabs.Trigger>
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Events',
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? 'calendar' : 'calendar-outline'}
+              size={24}
+              color={focused ? '#3D3D3D' : '#9CA3AF'}
+            />
+          ),
+        }}
+      />
 
-          <NativeTabs.Trigger name="profile">
-            <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
-            <NativeTabs.Trigger.Icon sf="person.crop.circle" md="person" />
-          </NativeTabs.Trigger>
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="search">
-        <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              size={24}
+              color={focused ? '#3D3D3D' : '#9CA3AF'}
+            />
+          ),
+        }}
+      />
+    </Tabs>
   );
 }

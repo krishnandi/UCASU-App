@@ -45,7 +45,7 @@ export default function LoginScreen() {
     setBusy(true);
     try {
       await enterApp(currentUser.role);
-      router.replace('/');
+      router.replace('/(tabs)');
     } finally {
       setBusy(false);
     }

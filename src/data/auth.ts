@@ -14,6 +14,6 @@ export const DEMO_USERS: Record<UserRole, DemoUser> = {
 };
 
 export async function loginWithDemoRole(role: UserRole): Promise<DemoUser> {
-  // Swap this body later for Supabase/Firebase or MSL API auth
+  // Supabase/Firebase or MSL API auth
   return Promise.resolve(DEMO_USERS[role]);
 }

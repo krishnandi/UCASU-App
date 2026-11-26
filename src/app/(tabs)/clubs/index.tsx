@@ -1,13 +1,13 @@
+// src/app/(tabs)/clubs/index.tsx
 import { useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-// Replace these with your actual imports from @/data/societies and @/components/SocietyCard
 import { SocietyCard } from '@/components/SocietyCard';
 import { SOCIETIES, type Society } from '@/data/societies';
 
 const CAMPUSES = ['All', 'Farnham', 'Epsom', 'Canterbury'];
 
-export default function HomeScreen() {
+export default function ClubsScreen() {
   const [selectedCampus, setSelectedCampus] = useState<string>('All');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
