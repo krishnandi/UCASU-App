@@ -19,7 +19,27 @@ export default function AppTabs() {
           renderingMode="template"
         />
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger>
+        <NativeTabs.Trigger name="index">
+            <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+            <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
+          </NativeTabs.Trigger>
 
+          <NativeTabs.Trigger name="search">
+            <NativeTabs.Trigger.Label>Societies</NativeTabs.Trigger.Label>
+            <NativeTabs.Trigger.Icon sf="person.3.fill" md="groups" />
+          </NativeTabs.Trigger>
+
+          <NativeTabs.Trigger name="explore">
+            <NativeTabs.Trigger.Label>Events</NativeTabs.Trigger.Label>
+            <NativeTabs.Trigger.Icon sf="calendar" md="event" />
+          </NativeTabs.Trigger>
+
+          <NativeTabs.Trigger name="profile">
+            <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
+            <NativeTabs.Trigger.Icon sf="person.crop.circle" md="person" />
+          </NativeTabs.Trigger>
+      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="search">
         <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon

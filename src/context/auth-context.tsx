@@ -1,4 +1,3 @@
-// src/context/auth-context.tsx
 import { DEMO_USERS, loginWithDemoRole, type DemoUser, type UserRole } from '@/data/auth';
 import { createContext, useContext, useState, type ReactNode } from 'react';
 
