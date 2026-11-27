@@ -30,6 +30,8 @@ export async function createEvent(
         // Check that the date is in YYYY-MM-DD format and is a valid calendar date.
         !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
         !Number.isFinite(timestamp) ||
+
+        // Comparing the parsed date with the original input to detect dates that JS normalised (e.g. 2026-02-30 -> 2026-03-02)
         new Date(timestamp).
     )
 
