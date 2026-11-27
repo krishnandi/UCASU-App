@@ -1,13 +1,15 @@
+// src/app/(tabs)/explore/index.tsx
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
-  FlatList,
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
+    FlatList,
+    Image,
+    Pressable,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
 } from 'react-native';
 
 import { TopSearchHeader } from '@/components/TopSearchHeader';
@@ -16,6 +18,7 @@ import { CAMPUS_EVENTS, type CampusEvent } from '@/data/events';
 const CAMPUSES = ['All', 'Farnham', 'Epsom', 'Canterbury'] as const;
 
 export default function EventsScreen() {
+  const router = useRouter();
   const [selectedCampus, setSelectedCampus] = useState<(typeof CAMPUSES)[number]>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [savedIds, setSavedIds] = useState<string[]>([]);
@@ -42,7 +45,10 @@ export default function EventsScreen() {
   const renderEvent = ({ item }: { item: CampusEvent }) => {
     const isSaved = savedIds.includes(item.id);
     return (
-      <View style={styles.card}>
+      <Pressable
+        onPress={() => router.push(`/(tabs)/explore/${item.id}`)}
+        style={({ pressed }) => [styles.card, pressed && { opacity: 0.9 }]}
+      >
         <Image source={item.image} style={styles.cardImage} resizeMode="cover" />
         <View style={styles.cardBody}>
           <View style={styles.metaTop}>
@@ -64,7 +70,10 @@ export default function EventsScreen() {
 
           <View style={styles.cardFooter}>
             <Pressable
-              onPress={() => toggleSaved(item.id)}
+              onPress={(e) => {
+                e.stopPropagation();
+                toggleSaved(item.id);
+              }}
               style={[styles.saveBtn, isSaved && styles.saveBtnActive]}
             >
               <Ionicons
@@ -78,7 +87,7 @@ export default function EventsScreen() {
             </Pressable>
           </View>
         </View>
-      </View>
+      </Pressable>
     );
   };
 
@@ -177,9 +186,8 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    height: 250,
+    height: 150,
     backgroundColor: '#E2E8F0',
-    top: 0,
   },
   cardBody: {
     padding: 14,
@@ -188,7 +196,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 2,
   },
   campusBadge: {
     fontSize: 12,

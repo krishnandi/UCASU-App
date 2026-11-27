@@ -17,7 +17,7 @@ export interface Society {
 }
 
 export const SOCIETIES: Society[] = [
-  {
+    {
     id: '1',
     name: 'Drag Society',
     campus: 'Farnham',
@@ -28,7 +28,7 @@ export const SOCIETIES: Society[] = [
       'Welcome to the Drag Society! Currently home to the Haus of Saint Vicious, we welcome anyone wanting to get involved in drag.',
     events: [
       {
-        id: 'e1',
+        id: 'evt-1', // Matches CAMPUS_EVENTS id
         title: 'Cirque De Slay',
         dateLocation: 'Fri 27 Mar · Glasshouse · From £4.00',
         image: require('../../assets/images/dragevent.jpg'),

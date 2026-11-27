@@ -102,7 +102,19 @@ export default function SocietyDetailScreen() {
             </View>
           ) : (
             society.events.map((ev) => (
-              <Pressable key={ev.id} style={styles.eventRow}>
+              <Pressable
+                key={ev.id}
+                onPress={() =>
+                  router.push({
+                    pathname: '/(tabs)/explore/[eventId]',
+                    params: { eventId: ev.id },
+                  })
+                }
+                style={({ pressed }) => [
+                  styles.eventRow,
+                  pressed && { opacity: 0.85 },
+                ]}
+              >
                 <Image
                   source={ev.image ?? society.image}
                   style={styles.eventThumb}
@@ -254,4 +266,3 @@ const styles = StyleSheet.create({
   reminderTitle: { fontSize: 14, fontWeight: '700', color: '#111' },
   reminderSub: { fontSize: 12, color: '#6B7280', marginTop: 2 },
 });
-

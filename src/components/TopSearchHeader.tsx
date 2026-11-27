@@ -1,27 +1,35 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
 type TopSearchHeaderProps = {
   title: string;
   eyebrow?: string;
   placeholder?: string;
-  value?: string;
-  onChangeText?: (text: string) => void;
+  value: string;
+  onChangeText: (text: string) => void;
 };
 
 export function TopSearchHeader({
   title,
   eyebrow,
   placeholder = 'Search...',
-  value = '',
+  value,
   onChangeText,
 }: TopSearchHeaderProps) {
   const [expanded, setExpanded] = useState(false);
 
   const handleToggle = () => {
-    if (expanded && onChangeText) {
+    if (expanded) {
       onChangeText('');
+      Keyboard.dismiss();
     }
     setExpanded((prev) => !prev);
   };
@@ -29,21 +37,28 @@ export function TopSearchHeader({
   return (
     <View style={styles.wrapper}>
       <View style={styles.topRow}>
-        <View>
-          {eyebrow ? <Text style={styles.eyebrow}>{eyebrow}</Text> : null}
-          <Text style={styles.title}>{title}</Text>
+        <View style={styles.titleBlock}>
+          {eyebrow ? (
+            <Text style={styles.eyebrow} numberOfLines={1}>
+              {eyebrow}
+            </Text>
+          ) : null}
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
+          </Text>
         </View>
 
         <Pressable
           onPress={handleToggle}
           hitSlop={10}
+          accessibilityLabel={expanded ? 'Close search' : 'Open search'}
           style={({ pressed }) => [styles.searchIconBtn, pressed && styles.pressed]}
         >
           <Ionicons name={expanded ? 'close' : 'search'} size={20} color="#3D3D3D" />
         </Pressable>
       </View>
 
-      {expanded && onChangeText ? (
+      {expanded ? (
         <View style={styles.inputRow}>
           <Ionicons name="search" size={16} color="#9CA3AF" />
           <TextInput
@@ -51,9 +66,16 @@ export function TopSearchHeader({
             onChangeText={onChangeText}
             placeholder={placeholder}
             placeholderTextColor="#9CA3AF"
+            returnKeyType="search"
+            onSubmitEditing={() => Keyboard.dismiss()}
             autoFocus
             style={styles.input}
           />
+          {value.length > 0 ? (
+            <Pressable onPress={() => onChangeText('')} hitSlop={8}>
+              <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+            </Pressable>
+          ) : null}
         </View>
       ) : null}
     </View>
@@ -62,8 +84,20 @@ export function TopSearchHeader({
 
 const styles = StyleSheet.create({
   wrapper: { marginBottom: 14 },
-  topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  eyebrow: { fontSize: 11, fontWeight: '800', letterSpacing: 1, color: '#0D9488', marginBottom: 2 },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  titleBlock: { flex: 1 },
+  eyebrow: {
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 1,
+    color: '#0D9488',
+    marginBottom: 2,
+  },
   title: { fontSize: 28, fontWeight: '800', color: '#111827' },
   searchIconBtn: {
     width: 40,
