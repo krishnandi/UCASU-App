@@ -1,180 +1,256 @@
-import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
-import { Platform, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useMemo, useState } from 'react';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-import { ExternalLink } from '@/components/external-link';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { TopSearchHeader } from '@/components/TopSearchHeader';
+import { CAMPUS_EVENTS, type CampusEvent } from '@/data/events';
 
-export default function TabTwoScreen() {
-  const safeAreaInsets = useSafeAreaInsets();
-  const insets = {
-    ...safeAreaInsets,
-    bottom: safeAreaInsets.bottom + BottomTabInset + Spacing.three,
+const CAMPUSES = ['All', 'Farnham', 'Epsom', 'Canterbury'] as const;
+
+export default function EventsScreen() {
+  const [selectedCampus, setSelectedCampus] = useState<(typeof CAMPUSES)[number]>('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [savedIds, setSavedIds] = useState<string[]>([]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return CAMPUS_EVENTS.filter((event) => {
+      const matchesCampus = selectedCampus === 'All' || event.campus === selectedCampus;
+      const matchesQuery =
+        !q ||
+        event.title.toLowerCase().includes(q) ||
+        event.hostName.toLowerCase().includes(q) ||
+        event.venue.toLowerCase().includes(q);
+      return matchesCampus && matchesQuery;
+    });
+  }, [selectedCampus, searchQuery]);
+
+  const toggleSaved = (id: string) => {
+    setSavedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
   };
-  const theme = useTheme();
 
-  const contentPlatformStyle = Platform.select({
-    android: {
-      paddingTop: insets.top,
-      paddingLeft: insets.left,
-      paddingRight: insets.right,
-      paddingBottom: insets.bottom,
-    },
-    web: {
-      paddingTop: Spacing.six,
-      paddingBottom: Spacing.four,
-    },
-  });
+  const renderEvent = ({ item }: { item: CampusEvent }) => {
+    const isSaved = savedIds.includes(item.id);
+    return (
+      <View style={styles.card}>
+        <Image source={item.image} style={styles.cardImage} resizeMode="cover" />
+        <View style={styles.cardBody}>
+          <View style={styles.metaTop}>
+            <Text style={styles.campusBadge}>
+              {item.campus} · {item.venue}
+            </Text>
+            <Text style={styles.priceText}>
+              {item.price === 0 ? 'Free' : `£${item.price.toFixed(2)}`}
+            </Text>
+          </View>
+
+          <Text style={styles.eventTitle}>{item.title}</Text>
+          <Text style={styles.hostText}>
+            {item.hostName} · {item.dateLabel}
+          </Text>
+          <Text style={styles.description} numberOfLines={2}>
+            {item.description}
+          </Text>
+
+          <View style={styles.cardFooter}>
+            <Pressable
+              onPress={() => toggleSaved(item.id)}
+              style={[styles.saveBtn, isSaved && styles.saveBtnActive]}
+            >
+              <Ionicons
+                name={isSaved ? 'bookmark' : 'bookmark-outline'}
+                size={15}
+                color={isSaved ? '#FFFFFF' : '#111827'}
+              />
+              <Text style={[styles.saveBtnText, isSaved && styles.saveBtnTextActive]}>
+                {isSaved ? 'Saved' : 'Save event'}
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
-      <ThemedView style={styles.container}>
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="subtitle">Explore</ThemedText>
-          <ThemedText style={styles.centerText} themeColor="textSecondary">
-            This starter app includes example{'\n'}code to help you get started.
-          </ThemedText>
+    <SafeAreaView style={styles.safeArea}>
+      <FlatList
+        data={filteredEvents}
+        keyExtractor={(item) => item.id}
+        renderItem={renderEvent}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <View style={styles.headerBlock}>
+            <TopSearchHeader
+              title="Events"
+              eyebrow="UCA STUDENTS' UNION"
+              placeholder="Search events, venues, or hosts..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+            />
 
-          <ExternalLink href="https://docs.expo.dev" asChild>
-            <Pressable style={({ pressed }) => pressed && styles.pressed}>
-              <ThemedView type="backgroundElement" style={styles.linkButton}>
-                <ThemedText type="link">Expo documentation</ThemedText>
-                <SymbolView
-                  tintColor={theme.text}
-                  name={{ ios: 'arrow.up.right.square', android: 'link', web: 'link' }}
-                  size={12}
-                />
-              </ThemedView>
-            </Pressable>
-          </ExternalLink>
-        </ThemedView>
-
-        <ThemedView style={styles.sectionsWrapper}>
-          <Collapsible title="File-based routing">
-            <ThemedText type="small">
-              This app has two screens: <ThemedText type="code">src/app/index.tsx</ThemedText> and{' '}
-              <ThemedText type="code">src/app/explore.tsx</ThemedText>
-            </ThemedText>
-            <ThemedText type="small">
-              The layout file in <ThemedText type="code">src/app/_layout.tsx</ThemedText> sets up
-              the tab navigator.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/router/introduction">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Android, iOS, and web support">
-            <ThemedView type="backgroundElement" style={styles.collapsibleContent}>
-              <ThemedText type="small">
-                You can open this project on Android, iOS, and the web. To open the web version,
-                press <ThemedText type="smallBold">w</ThemedText> in the terminal running this
-                project.
-              </ThemedText>
-              <Image
-                source={require('../../../assets/images/tutorial-web.png')}
-                style={styles.imageTutorial}
-              />
-            </ThemedView>
-          </Collapsible>
-
-          <Collapsible title="Images">
-            <ThemedText type="small">
-              For static images, you can use the <ThemedText type="code">@2x</ThemedText> and{' '}
-              <ThemedText type="code">@3x</ThemedText> suffixes to provide files for different
-              screen densities.
-            </ThemedText>
-            <Image source={require('../../../assets/images/react-logo.png')} style={styles.imageReact} />
-            <ExternalLink href="https://reactnative.dev/docs/images">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Light and dark mode components">
-            <ThemedText type="small">
-              This template has light and dark mode support. The{' '}
-              <ThemedText type="code">useColorScheme()</ThemedText> hook lets you inspect what the
-              user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-            </ThemedText>
-            <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-              <ThemedText type="linkPrimary">Learn more</ThemedText>
-            </ExternalLink>
-          </Collapsible>
-
-          <Collapsible title="Animations">
-            <ThemedText type="small">
-              This template includes an example of an animated component. The{' '}
-              <ThemedText type="code">src/components/ui/collapsible.tsx</ThemedText> component uses
-              the powerful <ThemedText type="code">react-native-reanimated</ThemedText> library to
-              animate opening this hint.
-            </ThemedText>
-          </Collapsible>
-        </ThemedView>
-        {Platform.OS === 'web' && <WebBadge />}
-      </ThemedView>
-    </ScrollView>
+            <View style={styles.filterRow}>
+              {CAMPUSES.map((campus) => {
+                const active = selectedCampus === campus;
+                return (
+                  <Pressable
+                    key={campus}
+                    onPress={() => setSelectedCampus(campus)}
+                    style={[styles.pill, active && styles.pillActive]}
+                  >
+                    <Text style={[styles.pillText, active && styles.pillTextActive]}>
+                      {campus}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyTitle}>No matching events</Text>
+            <Text style={styles.emptySub}>Try another campus filter or clear your search.</Text>
+          </View>
+        }
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  safeArea: {
     flex: 1,
+    backgroundColor: '#F8FAFC',
   },
-  contentContainer: {
+  listContent: {
+    padding: 18,
+    paddingTop: 20,
+    paddingBottom: 105,
+    gap: 14,
+  },
+  headerBlock: {
+    marginBottom: 4,
+  },
+  filterRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: 8,
   },
-  container: {
-    maxWidth: MaxContentWidth,
-    flexGrow: 1,
+  pill: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
   },
-  titleContainer: {
-    gap: Spacing.three,
-    alignItems: 'center',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.six,
+  pillActive: {
+    backgroundColor: '#0F172A',
+    borderColor: '#0F172A',
   },
-  centerText: {
-    textAlign: 'center',
+  pillText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#475569',
   },
-  pressed: {
-    opacity: 0.7,
+  pillTextActive: {
+    color: '#FFFFFF',
   },
-  linkButton: {
-    flexDirection: 'row',
-    paddingHorizontal: Spacing.four,
-    paddingVertical: Spacing.two,
-    borderRadius: Spacing.five,
-    justifyContent: 'center',
-    gap: Spacing.one,
-    alignItems: 'center',
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  sectionsWrapper: {
-    gap: Spacing.five,
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.three,
-  },
-  collapsibleContent: {
-    alignItems: 'center',
-  },
-  imageTutorial: {
+  cardImage: {
     width: '100%',
-    aspectRatio: 296 / 171,
-    borderRadius: Spacing.three,
-    marginTop: Spacing.two,
+    height: 150,
+    backgroundColor: '#E2E8F0',
   },
-  imageReact: {
-    width: 100,
-    height: 100,
-    alignSelf: 'center',
+  cardBody: {
+    padding: 14,
+  },
+  metaTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  campusBadge: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#0D9488',
+  },
+  priceText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  eventTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  hostText: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 2,
+    marginBottom: 6,
+  },
+  description: {
+    fontSize: 13.5,
+    lineHeight: 19,
+    color: '#475569',
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    marginTop: 12,
+  },
+  saveBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+    backgroundColor: '#F1F5F9',
+  },
+  saveBtnActive: {
+    backgroundColor: '#0D9488',
+  },
+  saveBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  saveBtnTextActive: {
+    color: '#FFFFFF',
+  },
+  emptyBox: {
+    paddingVertical: 40,
+    alignItems: 'center',
+  },
+  emptyTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  emptySub: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 4,
   },
 });

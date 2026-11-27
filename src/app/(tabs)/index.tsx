@@ -1,4 +1,3 @@
-// src/app/(tabs)/index.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -70,6 +69,16 @@ const ANNOUNCEMENTS: Announcement[] = [
       'Confidential guidance on academic appeals, wellbeing resources, and student life.',
     date: 'This week',
     campus: 'All Campuses',
+  },
+  {
+    id: '5',
+    tag: 'Campus',
+    title: 'Course Changes',
+    summary:
+      'New course modules and changes to take place.',
+    date: 'This week',
+    campus: 'Canterbury',
+    url: 'https://www.ucasu.com',
   },
 ];
 
