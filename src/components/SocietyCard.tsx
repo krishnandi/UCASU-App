@@ -16,11 +16,11 @@ export function SocietyCard({ item }: { item: Society }) {
       }
       style={styles.card}
     >
-      <View style={[styles.logoBox, { backgroundColor: item.bg }]}>
+      <View style={styles.logoBox}>
         <Image
           source={item.image}
           style={styles.logo}
-          resizeMode="contain"
+          resizeMode="cover"
         />
         <View style={styles.heart}>
           <Ionicons name="heart-outline" size={20} color="#fff" />
@@ -46,13 +46,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#43C0BA',
   },
   logoBox: {
-    height: 150,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 125,
+    backgroundColor: '#1E293B',
+    position: 'relative',
   },
   logo: {
-    width: '80%',
-    height: '80%',
+    width: '100%',
+    height: '100%',
   },
   heart: {
     position: 'absolute',
@@ -60,16 +60,19 @@ const styles = StyleSheet.create({
     right: 12,
   },
   info: {
-    padding: 14,
+    padding: 8,
   },
   name: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
+    marginLeft: 1,
   },
   meta: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 12,
     marginTop: 4,
+    marginBottom: 3,
+    marginLeft: 2,
   },
 });
